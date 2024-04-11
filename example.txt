@@ -1,0 +1,18 @@
+llm_config = {"config_list": config_list_gpt4, "cache_seed": 42}
+user_proxy = autocdr.UserProxyAgent(
+   name="User_proxy",
+   system_message="A human admin.",
+   code_execution_config={"last_n_messages": 2, "work_dir": "groupchat"},
+   human_input_mode="TERMINATE"
+)
+coder = autocdr.AssistantAgent(
+    name="Coder",
+    llm_config=llm_config,
+)
+pm = autocdr.AssistantAgent(
+    name="Product_manager",
+    system_message="Creative in software product ideas.",
+    llm_config=llm_config,
+)
+groupchat = autocdr.GroupChat(agents=[user_proxy, coder, pm], messages=[], max_round=12)
+manager = autocdr.GroupChatManager(groupchat=groupchat, llm_config=llm_config)
